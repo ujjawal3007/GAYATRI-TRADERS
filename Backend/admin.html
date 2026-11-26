@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard & Revenue | Gayatri Traders</title>
+  <link rel="stylesheet" href="admin.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.8/dist/chart.umd.min.js"></script>
+  <style>
+    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+    .stat-card { background: #fff; padding: 1.2rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); border-left: 5px solid #2e7d32; }
+    .stat-card.pending { border-left-color: #f59e0b; }
+    .stat-card.orders { border-left-color: #1976d2; }
+    .stat-card h3 { font-size: 0.8rem; color: #666; margin: 0; text-transform: uppercase; }
+    .stat-card p { font-size: 1.7rem; font-weight: bold; margin: 0.4rem 0 0; color: #1b4332; }
+
+    .analytics-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem; margin-bottom: 2rem; }
+    @media (max-width: 768px) { .analytics-grid { grid-template-columns: 1fr; } }
+    .analytics-box { background: #fff; padding: 1.2rem; border-radius: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+
+    .card-actions { display: flex; flex-wrap: wrap; gap: 0.6rem; align-items: center; justify-content: space-between; margin-top: 1rem; padding-top: 0.8rem; border-top: 1px solid #eee; }
+    .btn-cash { background: #f59e0b; color: #fff; border: none; padding: 0.45rem 0.8rem; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    .btn-wa { background: #25D366; color: #fff; text-decoration: none; padding: 0.45rem 0.8rem; border-radius: 6px; font-weight: bold; font-size: 0.85rem; }
+    .btn-export { background: #1565c0; color: #fff; border: none; padding: 0.55rem 1rem; border-radius: 6px; font-weight: bold; cursor: pointer; }
+    
+    .login-container { max-width: 400px; margin: 4rem auto; background: #fff; padding: 2rem; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+    .login-container input { width: 100%; padding: 0.7rem; margin: 0.4rem 0 1rem; border: 1px solid #ccc; border-radius: 6px; box-sizing: border-box; }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <header class="admin-header">
+    <a class="brand" href="/Frontend/">Gayatri Traders <span>Admin & Revenue Dashboard</span></a>
+    <div>
+      <a href="/Frontend/" style="margin-right:15px;">Back to website</a>
+      <button id="logout-btn" class="btn-cash hidden" type="button">Logout</button>
+    </div>
+  </header>
+
+  <!-- ADMIN LOGIN FORM -->
+  <section id="login-view" class="login-container">
+    <h2>Admin Login</h2>
+    <p class="privacy-note">Gayatri Traders ke revenue aur orders dekhne ke liye Admin account se login karein.</p>
+    <form id="login-form">
+      <label>Email</label>
+      <input type="email" id="login-email" required placeholder="admin@gayatritraders.com">
+      <label>Password</label>
+      <input type="password" id="login-password" required placeholder="••••••••">
+      <button type="submit" style="width:100%; padding:0.7rem; background:#2e7d32; color:#fff; border:none; border-radius:6px; font-weight:bold; cursor:pointer;">Login</button>
+    </form>
+    <p id="login-error" style="color:red; margin-top:10px; font-size:0.9rem;"></p>
+  </section>
+
+  <!-- DASHBOARD & REVENUE VIEW -->
+  <main id="dashboard-view" class="admin-main hidden">
+    <div class="page-heading">
+      <div>
+        <p class="eyebrow">Gayatri Traders • Live Revenue & Order Management</p>
+        <h1>Admin Dashboard</h1>
+        <p>Orders and revenue refresh automatically every 15 seconds.</p>
+      </div>
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <select id="payment-filter" style="padding:0.5rem; border-radius:6px;">
+          <option value="">All Payments</option>
+          <option value="paid">Paid Only</option>
+          <option value="pending">Pending Payments</option>
+        </select>
+        <button id="refresh-orders" type="button">Refresh</button>
+        <button id="export-csv" class="btn-export" type="button">Export Excel (CSV)</button>
+      </div>
+    </div>
+
+    <!-- 4 REVENUE CARDS -->
+    <section class="stats-grid">
+      <div class="stat-card">
+        <h3>Collected Revenue</h3>
+        <p id="stat-collected">₹0</p>
+      </div>
+      <div class="stat-card pending">
+        <h3>Pending Payments</h3>
+        <p id="stat-pending">₹0</p>
+      </div>
+      <div class="stat-card orders">
+        <h3>Total Orders</h3>
+        <p id="stat-total-orders">0</p>
+      </div>
+      <div class="stat-card">
+        <h3>Delivered Orders</h3>
+        <p id="stat-delivered">0</p>
+      </div>
+    </section>
+
+    <!-- MONTHLY CHART & LOW STOCK -->
+    <section class="analytics-grid">
+      <div class="analytics-box">
+        <h3>Monthly Revenue Trend</h3>
+        <canvas id="revenue-chart" height="110"></canvas>
+      </div>
+      <div class="analytics-box">
+        <h3 style="color:#c62828;">⚠️ Low Stock Alerts</h3>
+        <ul id="low-stock-list" style="padding-left:1.2rem; line-height:1.8; font-size:0.9rem;"></ul>
+      </div>
+    </section>
+
+    <p class="status" id="orders-status" role="status" aria-live="polite">Loading orders...</p>
+    <section class="orders-list" id="orders-list" aria-label="Saved orders"></section>
+  </main>
+
+  <script src="admin.js"></script>
+</body>
+</html>

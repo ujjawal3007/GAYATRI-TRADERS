@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Gayatri Traders - premium rice sourced and processed with care.">
+  <title>Gayatri Traders | Premium Rice</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="site-header" id="top">
+    <div class="container nav-wrap">
+      <a class="brand" href="#top" aria-label="Gayatri Traders home">
+        <span class="brand-mark" aria-hidden="true">
+          <svg viewBox="0 0 48 48"><path d="M24 42V20M24 29c-8 0-13-5-13-12 8 0 13 5 13 12Zm0-4c8 0 13-5 13-12-8 0-13 5-13 12Zm0 11c7 0 11-4 11-10-7 0-11 4-11 10Z"/><path d="M24 20c-5-5-5-10 0-15 5 5 5 10 0 15Z"/></svg>
+        </span>
+        <span>
+          <strong>Gayatri</strong>
+          <small>Traders</small>
+        </span>
+      </a>
+
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+
+      <nav class="main-nav" id="main-nav" aria-label="Main navigation">
+        <a class="active" href="#top">Home</a>
+        <a href="#products">Our Rice</a>
+        <a href="#process">Process</a>
+        <a href="#about">About Us</a>
+      </nav>
+      <div class="header-actions">
+        <button class="header-action cart-toggle" id="cart-toggle" type="button" aria-haspopup="dialog" aria-controls="cart-dialog">
+          <span aria-hidden="true">🛒</span> <span class="cart-label">Cart</span> <span class="cart-count" id="cart-count">0</span>
+        </button>
+        <button class="header-action sign-in-toggle" id="sign-in-toggle" type="button" aria-haspopup="dialog" aria-controls="sign-in-dialog">
+          <span class="google-g" aria-hidden="true">G</span> Sign in
+        </button>
+        <a class="nav-cta" href="#contact">Contact <span aria-hidden="true">↗</span></a>
+      </div>
+    </div>
+  </header>
+
+  <dialog class="site-dialog" id="cart-dialog" aria-labelledby="cart-title">
+    <div class="dialog-heading">
+      <div><p class="eyebrow"><span></span> Your selection</p><h2 id="cart-title">Shopping cart</h2></div>
+      <button class="dialog-close" type="button" data-close-dialog aria-label="Close cart">×</button>
+    </div>
+    <div class="cart-items" id="cart-items"></div>
+    <div class="cart-footer">
+      <p>Estimated total: <strong id="cart-total">₹0</strong><br>Delivery charges, if any, are confirmed separately.</p>
+      <button class="button button-dark" id="checkout-cart" type="button" disabled>Continue to order <span>→</span></button>
+    </div>
+  </dialog>
+
+  <dialog class="site-dialog order-dialog" id="order-dialog" aria-labelledby="order-title">
+    <div class="dialog-heading">
+      <div><p class="eyebrow"><span></span> Order request</p><h2 id="order-title">Delivery details</h2></div>
+      <button class="dialog-close" type="button" data-close-dialog aria-label="Close order form">×</button>
+    </div>
+    <form id="order-form">
+      <label for="customer-name">Name</label>
+      <input id="customer-name" name="name" autocomplete="name" required maxlength="100">
+      <label for="customer-email">Email for order updates</label>
+      <input id="customer-email" name="email" type="email" autocomplete="email" required maxlength="254">
+      <label for="customer-phone">Phone</label>
+      <input id="customer-phone" name="phone" type="tel" autocomplete="tel" required minlength="10" maxlength="18">
+      <label for="delivery-street">Street address</label>
+      <textarea id="delivery-street" name="street" autocomplete="street-address" required minlength="5" maxlength="300" rows="2"></textarea>
+      <label for="delivery-city">City</label>
+      <input id="delivery-city" name="city" autocomplete="address-level2" required maxlength="100">
+      <label for="delivery-postal-code">Postal code</label>
+      <input id="delivery-postal-code" name="postalCode" autocomplete="postal-code" required minlength="4" maxlength="12">
+      <label for="payment-method">Payment method</label>
+      <select id="payment-method" name="paymentMethod" required>
+        <option value="COD">Cash on delivery</option>
+        <option value="ONLINE">Pay online (Razorpay)</option>
+      </select>
+      <div class="order-summary" id="order-summary"></div>
+      <p class="order-price-note">The server recalculates the total. Delivery charges are confirmed separately.</p>
+      <button class="button button-dark" type="submit">Place order <span>→</span></button>
+      <p class="order-status" id="order-status" role="status" aria-live="polite"></p>
+    </form>
+  </dialog>
+
+  <dialog class="site-dialog sign-in-dialog" id="sign-in-dialog" aria-labelledby="sign-in-title">
+    <div class="dialog-heading">
+      <div><p class="eyebrow"><span></span> Gayatri Traders</p><h2 id="sign-in-title">Sign in</h2></div>
+      <button class="dialog-close" type="button" data-close-dialog aria-label="Close sign-in dialog">×</button>
+    </div>
+    <p class="sign-in-copy">Sign in with Google, or use your email and password.</p>
+    <div id="google-signin-button"></div>
+    <p class="auth-setup-note" id="auth-setup-note">Google sign-in needs a configured OAuth Client ID. Do not enter or share your Gmail password here.</p>
+    <p class="order-status" id="auth-status" role="status" aria-live="polite"></p>
+    <details class="email-auth">
+      <summary>Use email and password</summary>
+      <form id="email-register-form">
+        <label for="register-name">Name</label>
+        <input id="register-name" name="name" autocomplete="name" required minlength="2" maxlength="100">
+        <label for="register-email">Email</label>
+        <input id="register-email" name="email" type="email" autocomplete="email" required maxlength="254">
+        <label for="register-password">Password</label>
+        <input id="register-password" name="password" type="password" autocomplete="new-password" required minlength="8" maxlength="128">
+        <button type="submit">Create account</button>
+      </form>
+      <form id="email-verify-form">
+        <label for="verify-email">Email verification</label>
+        <input id="verify-email" name="email" type="email" autocomplete="email" required maxlength="254">
+        <label for="verify-code">6-digit code</label>
+        <input id="verify-code" name="otp" inputmode="numeric" pattern="[0-9]{6}" required maxlength="6">
+        <button type="submit">Verify email</button>
+        <button id="resend-verification" type="button">Resend code</button>
+      </form>
+      <form id="email-login-form">
+        <label for="customer-login-email">Email</label>
+        <input id="customer-login-email" name="email" type="email" autocomplete="email" required maxlength="254">
+        <label for="customer-login-password">Password</label>
+        <input id="customer-login-password" name="password" type="password" autocomplete="current-password" required>
+        <button type="submit">Sign in</button>
+      </form>
+    </details>
+  </dialog>
+
+  <dialog class="site-dialog photo-dialog" id="photo-dialog" aria-labelledby="photo-caption">
+    <div class="photo-dialog-header">
+      <button class="dialog-close" type="button" data-close-dialog aria-label="Close image preview">×</button>
+    </div>
+    <div class="image-preview" id="image-preview"></div>
+    <p class="photo-caption" id="photo-caption"></p>
+  </dialog>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-grid">
+        <div class="hero-copy">
+          <p class="eyebrow"><span></span> From our fields to your family</p>
+          <h1>Pure rice.<br><em>Perfectly nurtured.</em></h1>
+          <p class="hero-lead">Premium-quality rice, carefully sourced from trusted farms and delivered with honesty, purity and care.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#products">Explore Our Rice <span>→</span></a>
+            <a class="text-link" href="#process"><span class="play">▶</span> See our process</a>
+          </div>
+        </div>
+
+        <div class="hero-visual" aria-label="Premium rice in a wooden bowl">
+          <div class="sun-disc"></div>
+          <div class="rice-field field-one"></div>
+          <div class="rice-field field-two"></div>
+          <div class="bowl">
+            <div class="bowl-rice"></div>
+            <div class="bowl-front"></div>
+          </div>
+          <div class="quality-card">
+            <span class="quality-icon">✓</span>
+            <div><strong>100% Quality</strong><small>Checked &amp; certified</small></div>
+          </div>
+          <div class="grain grain-a"></div>
+          <div class="grain grain-b"></div>
+          <div class="grain grain-c"></div>
+        </div>
+      </div>
+      <div class="hero-curve"></div>
+    </section>
+
+    <section class="trust-strip" aria-label="Business highlights">
+      <div class="container trust-grid">
+        <div><strong>25+</strong><span>Years of trust</span></div>
+        <div><strong>40+</strong><span>Rice varieties</span></div>
+        <div><strong>500+</strong><span>Partner farmers</span></div>
+        <div><strong>18</strong><span>States delivered</span></div>
+      </div>
+    </section>
+
+    <section class="products section" id="products">
+      <div class="container">
+        <div class="section-heading">
+          <div>
+            <p class="eyebrow"><span></span> Our collection</p>
+            <h2>Rice for every table</h2>
+            <p class="price-note">Indicative rates; final order prices are confirmed before processing.</p>
+          </div>
+          <a class="outline-link" href="#contact">View all varieties <span>→</span></a>
+        </div>
+
+        <div class="product-shelves" id="product-shelves"></div>
+      </div>
+    </section>
+
+    <section class="process section" id="process">
+      <div class="container process-grid">
+        <div class="process-copy">
+          <p class="eyebrow"><span></span> Quality you can trust</p>
+          <h2>Care in every grain</h2>
+          <p>From careful sourcing to modern processing, every step is designed to preserve the natural goodness, aroma and taste of rice.</p>
+          <div class="steps">
+            <div class="step"><span>01</span><div><h3>Thoughtful sourcing</h3><p>Direct partnerships with experienced farming communities.</p></div></div>
+            <div class="step"><span>02</span><div><h3>Modern milling</h3><p>Precision technology for consistent size and natural aroma.</p></div></div>
+            <div class="step"><span>03</span><div><h3>Rigorous testing</h3><p>Every batch is checked for purity, moisture and quality.</p></div></div>
+          </div>
+        </div>
+        <div class="process-visual">
+          <div class="rice-sack"><span>GAYATRI</span><small>Traders</small></div>
+          <div class="harvest-ring"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="about section" id="about">
+      <div class="container about-grid">
+        <div class="about-badge"><strong>25</strong><span>Years of<br>excellence</span></div>
+        <div>
+          <p class="eyebrow light"><span></span> Our promise</p>
+          <h2>Good food begins with honest sourcing.</h2>
+        </div>
+        <p>We work closely with farmers and families to bring reliable, wholesome rice to homes and businesses across India.</p>
+      </div>
+    </section>
+
+    <section class="contact section" id="contact">
+      <div class="container contact-card">
+        <div class="contact-copy">
+          <p class="eyebrow"><span></span> Let's connect</p>
+          <h2>Bring the finest rice to your business.</h2>
+          <div class="contact-details">
+            <a href="tel:+919887909288">📞 +91 98879 09288</a>
+            <a href="tel:+918814099845">📞 +91 88140 99845</a>
+            <a href="mailto:ujjawalsinghrajput2105@gmail.com">✉ ujjawalsinghrajput2105@gmail.com</a>
+            <span>GSTIN: 08DDWPS0298L1ZF</span>
+            <span>Near Kajaria Plant, Bhonker Road, Gailpur, Tijara, Rajasthan - 101411</span>
+            <span>Office Hours: 9:00 AM - 8:00 PM</span>
+          </div>
+        </div>
+        <a class="button button-dark" href="mailto:ujjawalsinghrajput2105@gmail.com?subject=Rice%20Quotation%20Request">Request a quotation <span>→</span></a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container footer-main">
+      <div class="footer-about">
+        <div class="brand footer-brand">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 48 48"><path d="M24 42V20M24 29c-8 0-13-5-13-12 8 0 13 5 13 12Zm0-4c8 0 13-5 13-12-8 0-13 5-13 12Zm0 11c7 0 11-4 11-10-7 0-11 4-11 10Z"/><path d="M24 20c-5-5-5-10 0-15 5 5 5 10 0 15Z"/></svg>
+          </span>
+          <span><strong>Gayatri</strong><small>Traders</small></span>
+        </div>
+        <p>Pure rice. Carefully selected for your family and business.</p>
+      </div>
+      <div class="footer-column">
+        <h2>Explore</h2>
+        <a href="#products">Our rice</a>
+        <a href="#process">Our process</a>
+        <a href="#about">About us</a>
+        <a href="/admin/">Manage orders</a>
+      </div>
+      <div class="footer-column footer-contact">
+        <h2>Contact</h2>
+        <a href="tel:+919887909288">+91 98879 09288</a>
+        <a href="tel:+918814099845">+91 88140 99845</a>
+        <a href="mailto:ujjawalsinghrajput2105@gmail.com">ujjawalsinghrajput2105@gmail.com</a>
+        <p>Near Kajaria Plant, Bhonker Road,<br>Gailpur, Tijara, Rajasthan - 101411</p>
+        <p>Open daily, 9:00 AM - 8:00 PM</p>
+      </div>
+    </div>
+    <div class="container footer-bottom">
+      <span>© 2026 Gayatri Traders. All rights reserved.</span>
+      <span>GSTIN: 08DDWPS0298L1ZF</span>
+    </div>
+  </footer>
+
+  <script src="index.js"></script>
+</body>
+</html>
