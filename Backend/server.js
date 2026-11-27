@@ -41,8 +41,8 @@ app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/payment', require('./routes/paymentRoutes'));
 app.use('/api/analytics', require('./routes/analyticsRoutes'));
 
-app.get('/', (req, res) => res.redirect(302, '/Frontend/'));
-app.use('/Frontend', express.static(path.join(WORKSPACE_ROOT, 'Frontend')));
+app.use(express.static(path.join(WORKSPACE_ROOT, 'Frontend')));
+app.get('/', (req, res) => res.sendFile(path.join(WORKSPACE_ROOT, 'Frontend', 'index.html')));
 app.use('/images', express.static(path.join(WORKSPACE_ROOT, 'images')));
 app.get('/admin', (req, res) => res.redirect(302, '/admin/'));
 app.get(['/admin/', '/admin/admin.html'], (req, res) => res.sendFile(path.join(BACKEND_ROOT, 'admin.html')));
